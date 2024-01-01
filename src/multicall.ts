@@ -5,7 +5,7 @@ export type MulticallReturn = MulticallReturnType<ContractFunctionConfig[], true
 
 export type Multicall = {
   requests: MulticallRequest
-  handler: (responses: MulticallReturn) => unknown
+  parser: (responses: MulticallReturn) => unknown
 }
 
 export async function processMulticalls(client: PublicClient, multicalls: Multicall[]): Promise<unknown[]> {
@@ -15,5 +15,5 @@ export async function processMulticalls(client: PublicClient, multicalls: Multic
     responses.push(flatResponses.slice(pointer, pointer + multicalls[i].requests.length))
     pointer += multicalls[i].requests.length
   }
-  return multicalls.map((c, i) => c.handler(responses[i]))
+  return multicalls.map((c, i) => c.parser(responses[i]))
 }
